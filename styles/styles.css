@@ -1,12 +1,14 @@
 .sb-container {
     position: relative;
-    overflow: scroll;
+    overflow: auto;
+}
+.sb-container::-webkit-scrollbar {
+    display: none;
 }
 .sb-bar {
-    position: relative;
+    position: absolute;
     right: 0;
     top: 0;
-    height: 10%;
     width: 8px;
     background-color: #999;
     border: 0;
@@ -17,7 +19,6 @@
     float: right;
     right: 0;
     top: 0;
-    height: 99%;
     width: 10px;
     background-color: #fff;
     border: 0;

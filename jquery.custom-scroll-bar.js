@@ -1,13 +1,13 @@
 (function($) {
 
     $.extend($.fn, {
-        settings: {},
+        settings : {},
+        elemObj : {},
 
-        init: function(options){
+        sbInit: function(options){
+            this.elemObj.$element = this;
             this.settings = options || {
-                $element : this,
                 barWidth : "8px",
-                barHeight : "50%",
                 barColor : "#999",
                 showBarBorder : false,
                 barBorderColor : "#999",
@@ -19,36 +19,37 @@
                 capRadius : "3px",
                 caps : true
             };
-            this.render();
-            this.scroll();
+            this.sbRender();
+            this.sbScroll();
         },
 
-        render: function () {
-            var $elem = this.settings.$element,
-                trackHeight = $elem.innerHeight(),
-                contentHeight = $elem[0].scrollHeight,
-                $container = $elem.append("<div class='sb-track'><div class='sb-bar'></div></div>"),
-                $trackBar = $container.find(".sb-track"),
-                $scrollBar = $trackBar.find(".sb-bar");
+        sbRender: function () {
+            this.elemObj.trackHeight = this.elemObj.$element.innerHeight(),
+            this.elemObj.contentHeight = this.elemObj.$element[0].scrollHeight,
+            this.elemObj.$container = this.elemObj.$element.append("<div class='sb-track'><div class='sb-bar'></div></div>"),
+            this.elemObj.$trackBar = this.elemObj.$container.find(".sb-track"),
+            this.elemObj.$scrollBar = this.elemObj.$trackBar.find(".sb-bar");
 
-            $elem.addClass("sb-container");
-            $trackBar.height(trackHeight + "px");
-            if (contentHeight > trackHeight)
-                $scrollBar.height((trackHeight / contentHeight) * 100 + "%");
+            this.elemObj.$element.addClass("sb-container");
+            this.elemObj.$trackBar.height(this.elemObj.trackHeight + "px");
+            if (this.elemObj.contentHeight > this.elemObj.trackHeight)
+                this.elemObj.$scrollBar.height((this.elemObj.trackHeight / this.elemObj.contentHeight) * 100 + "%");
             else
-                $trackBar.hide();
+                this.elemObj.$trackBar.hide();
         },
 
-        scroll: function() {
-            var $elem = this.settings.$element,
-                trackHeight = $elem.innerHeight(),
-                contentHeight = $elem[0].scrollHeight,
-                $container = $elem.append("<div class='sb-track'><div class='sb-bar'></div></div>"),
-                $trackBar = $container.find(".sb-track"),
-                $scrollBar = $trackBar.find(".sb-bar"),
-                scrollPos = $container.scrollTop();
-            $container.scroll(function(event){
-                
+        sbScroll: function() {
+            var scrollPos = 0,
+                newPos = "",
+                sbWindow = this,
+                trackOffset = 0;
+            this.elemObj.$container.scroll(function(event){
+                scrollPos = sbWindow.elemObj.$element.scrollTop();
+                //trackOffset = sbWindow.elemObj.$trackBar.offset().top;
+                newPos = Math.round((scrollPos / sbWindow.elemObj.contentHeight) * (sbWindow.elemObj.trackHeight)) + scrollPos;
+                if(scrollPos < sbWindow.elemObj.contentHeight - sbWindow.elemObj.trackHeight)
+                    sbWindow.elemObj.$scrollBar.css("top", newPos + "px");
+                $("#pos").text(scrollPos + ", " + newPos);
             });
         }
     });
